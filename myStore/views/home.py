@@ -1,30 +1,81 @@
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 from django.http import HttpResponse
 from myStore.models import Product, Category
 
 from django.views import View
 
+class Home(View):
+
+    def post(self , request):
+        product = request.POST.get('product')
+        remove=request.POST.get('remove')
+        cart = request.session.get('cart')
+        if cart:
+            quantity=cart.get(product)
+            if quantity:
+                if remove:
+                    if quantity<=1:
+                        cart.pop(product)
+                    else:
+                        cart[product]=quantity-1
+                    
+                else:
+                    cart[product]=quantity+1
+            else:
+                cart[product]=1
+        else :
+            cart={}
+            cart[product]=1
+        request.session['cart']=cart  
+        print(product)
+        print (request.session['cart'])
+        return redirect('homePage')
+
+    def get(self, request):
+        cart=request.session.get('cart')
+        if not cart:
+            request.session['cart']={}
+        products=None
+        # request.session.pop('cart', None)  # Use pop() to remove the 'cart' item if it exists
+
+        categories=Category.get_all_categories()
+        print(request.GET.get('category'))
+        category_id=request.GET.get('category')
+        if category_id:
+            products=Product.get_all_products_by_id(category_id)
+        else:
+            products=Product.get_all_products()
+
+        
+        data={
+            'products':products,
+            'categories':categories
+        }
+        print(request.session.get('email'))
+        print('you are :',request.session.get('name'))
+        return render(request, 'home/index.html', context=data)
+
 
 
 # Create your views here.
-def home(request):
-    products=None
-    categories=Category.get_all_categories()
-    print(request.GET.get('category'))
-    category_id=request.GET.get('category')
-    if category_id:
-        products=Product.get_all_products_by_id(category_id)
-    else:
-         products=Product.get_all_products()
+# def home(request):
+    # products=None
+    # categories=Category.get_all_categories()
+    # print(request.GET.get('category'))
+    # category_id=request.GET.get('category')
+    # if category_id:
+    #     products=Product.get_all_products_by_id(category_id)
+    # else:
+    #      products=Product.get_all_products()
 
     
-    data={
-        'products':products,
-        'categories':categories
-    }
-    print(request.session.get('email'))
-    print('you are :',request.session.get('name'))
-    return render(request, 'home/index.html', context=data)
+    # data={
+    #     'products':products,
+    #     'categories':categories
+    # }
+    # print(request.session.get('email'))
+    # print('you are :',request.session.get('name'))
+    # return render(request, 'home/index.html', context=data)
 
 # def validateCustomer(cutomer):
 #     error_message=None
