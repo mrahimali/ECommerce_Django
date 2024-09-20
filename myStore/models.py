@@ -31,6 +31,9 @@ class Product(models.Model):
             return Product.get_all_products()
        
 
+    @staticmethod 
+    def get_products_by_ids(ids):
+        return Product.objects.filter(id__in=ids)
 
     def __str__(self):
         return self.name

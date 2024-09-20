@@ -18,9 +18,7 @@ class Login(View):
         if customer:
             flag=check_password(password, customer.password)
             if flag:
-                request.session['cutomer_id']=customer.id
-                request.session['email']=customer.email
-                request.session['name']=customer.first_name
+                request.session['customer']=customer.id
                 return redirect('/')
             else:
                 error_message="Password Invalid!!!"
@@ -29,6 +27,10 @@ class Login(View):
         print(customer)
         print(email, password)
         return render(request, 'login.html', {'error':error_message, 'values':filled_value})
+    
+def logout(request):
+    request.session.clear()
+    return redirect('login')
 
 # def Login(request):
 #     if request.method == 'GET':
