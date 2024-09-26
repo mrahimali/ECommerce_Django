@@ -27,8 +27,8 @@ class Home(View):
             cart={}
             cart[product]=1
         request.session['cart']=cart  
-        print(product)
-        print (request.session['cart'])
+        # print(product)
+        # print (request.session['cart'])
         return redirect('homePage')
 
     def get(self, request):
@@ -39,7 +39,7 @@ class Home(View):
         # request.session.pop('cart', None)  # Use pop() to remove the 'cart' item if it exists
 
         categories=Category.get_all_categories()
-        print(request.GET.get('category'))
+        # print(request.GET.get('category'))
         category_id=request.GET.get('category')
         if category_id:
             products=Product.get_all_products_by_id(category_id)
@@ -51,8 +51,8 @@ class Home(View):
             'products':products,
             'categories':categories
         }
-        print(request.session.get('email'))
-        print('you are :',request.session.get('name'))
+        # print(request.session.get('email'))
+        # print('you are :',request.session.get('name'))
         return render(request, 'home/index.html', context=data)
 
 

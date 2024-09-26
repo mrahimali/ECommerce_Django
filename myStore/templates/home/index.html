@@ -5,6 +5,7 @@ IndexPage
 {% endblock %}
 {% block content %}
 {% load cart %}
+{% load custom_filter %}
     <div class="row" >
         <div id="filter" class='col-lg-2 ms-3'>
             <div class="list-group">
@@ -27,8 +28,8 @@ IndexPage
                             <img src="{{product.product_images.url}}" height='300' width='auto'  class="card-img-top" alt="...">
                             <div class="card-body">
                                 <h5 class="card-title">{{product.name}}</h5>
-                                    <p class="card-text">Rs.{{ product.price }}</p>
-                                    {{product | is_in_cart:request.session.cart }}
+                                    <p class="card-text">{{ product.price|currency }}</p>
+                                    {% comment %} {{product | is_in_cart:request.session.cart }} {% endcomment %}
                                 
                                     <div class="card-footer p-0 row ">
                                         {% if product|is_in_cart:request.session.cart %}

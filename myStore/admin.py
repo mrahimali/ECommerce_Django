@@ -25,3 +25,9 @@ class AdminCutomer(admin.ModelAdmin):
 
 admin.site.register(Cutomer, AdminCutomer)
 
+
+class AdminOrder(admin.ModelAdmin):
+    list_display=['product','quantity']
+
+admin.site.register(Order, AdminOrder)
+

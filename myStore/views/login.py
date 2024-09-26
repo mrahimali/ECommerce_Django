@@ -1,10 +1,14 @@
 from django.views import View
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, HttpResponseRedirect
 from myStore.models import Cutomer
 from django.contrib.auth.hashers import make_password, check_password
 
 class Login(View):
+
+    return_url=None 
+
     def get(self, request):
+        Login.return_url=request.GET.get('return_url')
         return render(request, 'login.html')
 
     def post(self, request):
@@ -19,13 +23,17 @@ class Login(View):
             flag=check_password(password, customer.password)
             if flag:
                 request.session['customer']=customer.id
-                return redirect('/')
+                if Login.return_url:
+                    return HttpResponseRedirect(Login.return_url)
+                else:
+                    Login.return_url=None
+                    return redirect('/')
             else:
                 error_message="Password Invalid!!!"
         else:
             error_message="Email Invalid!!!"
-        print(customer)
-        print(email, password)
+        # print(customer)
+        # print(email, password)
         return render(request, 'login.html', {'error':error_message, 'values':filled_value})
     
 def logout(request):
